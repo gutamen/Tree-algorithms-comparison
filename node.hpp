@@ -5,6 +5,7 @@ class node{
     private:
     node *left = NULL, *right = NULL, *father = NULL;
     int balance = 0;
+    int nodeRelativeHeight = 0;
     double data;
 
     public:   

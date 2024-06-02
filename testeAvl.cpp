@@ -40,6 +40,7 @@ int main(int argc, char* argv[]) {
 
     // Consulta na árvore
     
+    /*
     int totalSearchComparisons = 0;
     auto startSearch = std::chrono::high_resolution_clock::now();
     while (queryFile >> key) {
@@ -51,8 +52,15 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Numero de comparacoes na busca: " << tree.getSearchComparisons() << std::endl;
     std::cout << "Tempo na busca: " << elapsedSearch.count() << " secs" << std::endl;
-    
+    */
 
+    //tree.balance(tree.getRoot());
+    std::cout << tree.getRoot()->right->right->key << std::endl;
+    tree.balance(tree.getRoot()->right->right);
+    std::cout << tree.getRoot()->right->right->key << std::endl;
+    std::cout << tree.getRoot()->right->right->left->father->key << std::endl;
+
+    
     constructionFile.close();
     queryFile.close();
 

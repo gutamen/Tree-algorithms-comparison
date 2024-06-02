@@ -5,7 +5,7 @@ class BST {
 public:
     BST() : root(nullptr), insertComparisons(0), searchComparisons(0) {}
     void insert(int key);
-    void iterativeInsert(int key);
+    Node* iterativeInsert(int key);
     bool search(int key);
     Node* iterativeSearch(int key);
     int getInsertComparisons() const { return insertComparisons; }
@@ -16,9 +16,9 @@ public:
     void setRoot(Node *root) {this->root = root;}
 
 private:
-    Node* root;
-    int insertComparisons;
-    int searchComparisons;
+    Node* root = nullptr;
+    int insertComparisons = 0;
+    int searchComparisons = 0;
     Node* insertRec(Node* node, int key);
     bool searchRec(Node* node, int key);
 };
@@ -59,26 +59,30 @@ bool BST::searchRec(Node* node, int key) {
     }
 }
 
-void BST::iterativeInsert(int key){
+Node* BST::iterativeInsert(int key){
     Node* node = getRoot();
 //    std::cout << "aqui" << std::endl;
 
-//    sumInsertComparisons(1);                // Contar comparações com o nulo?
+    sumInsertComparisons(1);                // Contar comparações com o nulo?
     if(node == nullptr){
         setRoot(new Node(key, 0)); 
-        return;
+        return getRoot();
     }
 
+    int level = 1;    
     Node* aux = new Node(key);
     backInsert:
-    if(node->key > key){
+    if(node->key < key){
         sumInsertComparisons(1);
         if (node->right == nullptr){
             node->right = aux;
-            return;
+            aux->father = node;
+            aux->level = level;
+            return aux;
         }
         else{
             node = node->right;
+            level++;
             goto backInsert;
         }
     }
@@ -86,10 +90,13 @@ void BST::iterativeInsert(int key){
         sumInsertComparisons(1);
         if (node->left == nullptr){
             node->left = aux;
-            return;
+            aux->father = node;
+            aux->level = level;
+            return aux;
         }
         else{
             node = node->left;
+            level++;
             goto backInsert;
         }
     }
@@ -98,6 +105,7 @@ void BST::iterativeInsert(int key){
 Node* BST::iterativeSearch(int key){
     Node* node = getRoot();
 
+    sumSearchComparisons(1);
     if (node == nullptr)
     {
         return nullptr;

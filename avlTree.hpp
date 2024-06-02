@@ -5,7 +5,5 @@
 class AVLTree : public BST{
 
     public:
-    void insert(int key){
-        
-    }
+    
 };

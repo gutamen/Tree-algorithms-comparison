@@ -9,8 +9,9 @@ class AVLTree : public BST{
     public:
     Node* iterativeInsert(int key){
         Node* node = BST::iterativeInsert(key);
-        
-        Node* aux = node;
+//        balanceTree(node);
+
+/*        Node* aux = node;
 
         bool verify = false;
         while(aux != nullptr){
@@ -18,11 +19,111 @@ class AVLTree : public BST{
 //            std::cout << aux->key << std::endl;   
             aux = aux->father;
         }
-        
+*/       
         return node;
     }
 
+    int height(Node* node) {
+        if (node == nullptr) {
+            return 0;
+        }
+        int leftHeight = node->left ? node->left->level + 1 : 0;
+        int rightHeight = node->right ? node->right->level + 1 : 0;
+        return std::max(leftHeight, rightHeight);
+    }
 
+    int getBalance(Node* node) {
+        if (node == nullptr) {
+            return 0;
+        }
+        int rightHeight = node->right == nullptr ? 0 : nodeMaxLevel(node->right) - node->level;
+        int leftHeight = node->left == nullptr ? 0 : nodeMaxLevel(node->left) - node->level;
+        return rightHeight - leftHeight;
+    }
+
+    void balanceTree(Node* node) {
+        //while (node != nullptr) {
+            //node->level = height(node);  // Atualiza a altura do nó
+            int balance = getBalance(node);
+            std::cout << balance << std::endl;
+            if (balance > 1) {
+                std::cout << "teste" << std::endl;
+                if (getBalance(node->left) < 0) {
+                    node->left = rotateLeft(node->left);
+                }
+                node = rotateRight(node);
+            } else if (balance < -1) {  
+                std::cout << "teste right" << std::endl;
+                if (getBalance(node->right) > 0) {
+                    node->right = rotateRight(node->right);
+                }
+                node = rotateLeft(node);
+            }
+
+            node = node->father;
+        //}
+    }
+
+    Node* rotateRight(Node* y) {
+        Node* x = y->left;
+        Node* T2 = x->right;
+
+        x->right = y;
+        y->left = T2;
+
+        if (T2 != nullptr) {
+            T2->father = y;
+        }
+
+        x->father = y->father;
+        y->father = x;
+
+        y->level = height(y);
+        x->level = height(x);
+
+        if (x->father != nullptr) {
+            if (x->father->left == y) {
+                x->father->left = x;
+            } else {
+                x->father->right = x;
+            }
+        } else {
+            setRoot(x);
+        }
+
+        return x;
+    }
+
+    Node* rotateLeft(Node* x) {
+        Node* y = x->right;
+        Node* T2 = y->left;
+
+        y->left = x;
+        x->right = T2;
+
+        if (T2 != nullptr) {
+            T2->father = x;
+        }
+
+        y->father = x->father;
+        x->father = y;
+
+        x->level = height(x);
+        y->level = height(y);
+
+        if (y->father != nullptr) {
+            if (y->father->left == x) {
+                y->father->left = y;
+            } else {
+                y->father->right = y;
+            }
+        } else {
+            setRoot(y);
+        }
+
+        return y;
+    }
+/*
     bool balance(Node *node){ 
         int height = 0;
         bool originBack = false; 
@@ -39,7 +140,9 @@ class AVLTree : public BST{
                 Node *aux = node;
                 node = aux->right;
                 node->father = aux->father;
+                Node *auxAux = node->left;
                 node->left = aux;
+                aux->right = auxAux;
                 aux->father = node;
                 if(node->father != nullptr){
                     if (node->father->right == aux){
@@ -53,8 +156,9 @@ class AVLTree : public BST{
                     setRoot(node);
                 }
 
-//                std::cout << "aqui" << std::endl;
+                std::cout << "aqui" << std::endl;
             }
+            std::cout << "aqui teste" << std::endl;
             return true;
         }
         else if (rightHeight - leftHeight < 1){ //Balanceamento Esquerda Negativo
@@ -66,6 +170,7 @@ class AVLTree : public BST{
         return false;
 
     }
+*/
 
     int nodeMaxLevel(Node *node){
         int maxLevel = node->level;

@@ -8,17 +8,17 @@ public:
     Node* iterativeInsert(int key);
     bool search(int key);
     Node* iterativeSearch(int key);
-    int getInsertComparisons() const { return insertComparisons; }
-    int getSearchComparisons() const { return searchComparisons; }
-    void sumInsertComparisons(int sum){ insertComparisons += sum;}
-    void sumSearchComparisons(int sum){ searchComparisons += sum;}
+    long getInsertComparisons() const { return insertComparisons; }
+    long getSearchComparisons() const { return searchComparisons; }
+    void sumInsertComparisons(long sum){ insertComparisons += sum;}
+    void sumSearchComparisons(long sum){ searchComparisons += sum;}
     Node* getRoot() {return this->root;}
     void setRoot(Node *root) {this->root = root;}
 
 private:
     Node* root = nullptr;
-    int insertComparisons = 0;
-    int searchComparisons = 0;
+    long insertComparisons = 0;
+    long searchComparisons = 0;
     Node* insertRec(Node* node, int key);
     bool searchRec(Node* node, int key);
 };

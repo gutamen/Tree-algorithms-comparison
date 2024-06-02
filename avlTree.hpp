@@ -31,7 +31,7 @@ class AVLTree : public BST{
         int rightHeight = node->right == nullptr ? 0 : nodeMaxLevel(node->right) - node->level;
         int leftHeight = node->left == nullptr ? 0 : nodeMaxLevel(node->left) - node->level;
 
-//        std::cout << rightHeight - leftHeight << std::endl;
+        std::cout << rightHeight - leftHeight << std::endl;
         
         if(rightHeight - leftHeight > 1){       //Balanceamento Direita Positivo
             // Precisa Balancear

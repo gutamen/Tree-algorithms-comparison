@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
     // Construção da árvore
     auto startConstruction = std::chrono::high_resolution_clock::now();
     while (constructionFile >> key) {
-        tree.insert(key);
+        tree.iterativeInsert(key);
     }
     auto endConstruction = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsedConstruction = endConstruction - startConstruction;
@@ -36,13 +36,13 @@ int main(int argc, char* argv[]) {
     int totalSearchComparisons = 0;
     auto startSearch = std::chrono::high_resolution_clock::now();
     while (queryFile >> key) {
-        tree.search(key);
-        totalSearchComparisons += tree.getSearchComparisons();
+        tree.iterativeSearch(key);
+        //totalSearchComparisons += tree.getSearchComparisons();
     }
     auto endSearch = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsedSearch = endSearch - startSearch;
 
-    std::cout << "Numero de comparacoes na busca: " << totalSearchComparisons << std::endl;
+    std::cout << "Numero de comparacoes na busca: " << tree.getSearchComparisons() << std::endl;
     std::cout << "Tempo na busca: " << elapsedSearch.count() << " secs" << std::endl;
 
     constructionFile.close();

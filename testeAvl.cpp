@@ -57,10 +57,10 @@ int main(int argc, char* argv[]) {
     //tree.balance(tree.getRoot());
     std::cout << tree.getRoot()->right->right->key << std::endl;
     tree.balance(tree.getRoot()->right->right);
-    std::cout << tree.getRoot()->right->right->key << std::endl;
-    std::cout << tree.getRoot()->right->right->left->father->key << std::endl;
+    //std::cout << tree.getRoot()->right->right->key << std::endl;
+    //std::cout << tree.getRoot()->right->right->left->father->key << std::endl;
 
-    
+
     constructionFile.close();
     queryFile.close();
 

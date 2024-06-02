@@ -1,8 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <chrono>
+#include "BST.hpp"
 
-struct Node {
+/*struct Node {
     int key;
     Node* left;
     Node* right;
@@ -60,6 +61,7 @@ bool BST::searchRec(Node* node, int key) {
         return searchRec(node->right, key);
     }
 }
+*/
 
 int main(int argc, char* argv[]) {
     if (argc != 3) {

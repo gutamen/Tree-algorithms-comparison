@@ -1,5 +1,6 @@
 #pragma once
 #include "Node.hpp"
+#include <stack>
 
 class BST {
 public:
@@ -14,6 +15,7 @@ public:
     void sumSearchComparisons(long long sum){ searchComparisons += sum;}
     Node* getRoot() {return this->root;}
     void setRoot(Node *root) {this->root = root;}
+    void printTree();
 
 private:
     Node* root = nullptr;
@@ -137,4 +139,29 @@ Node* BST::iterativeSearch(int key){
             goto backSearch;
         }
     }
+}
+
+void BST::printTree(){
+    Node* node = root;
+    std::stack<Node *> treeStack;
+    Node *currentNode = node;
+    char string[] = "------";
+    while (currentNode != NULL || treeStack.empty() == false){
+        while (currentNode != NULL){
+            treeStack.push(currentNode);
+            currentNode = currentNode->left;
+        }
+        currentNode = treeStack.top();
+        treeStack.pop();
+
+        for(int i = 0; i < currentNode->level; i++){
+            std::cout << string;
+        }
+        std::cout << ">";
+        std::cout << currentNode->key << std::endl;
+
+        currentNode = currentNode->right;
+    }
+
+    return;
 }

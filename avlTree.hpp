@@ -1,39 +1,30 @@
 #pragma once
 #include <iostream>
 #include <stack>
+#include <queue>
 #include "BST.hpp"
 
 
 class AVLTree : public BST{
     
+    private:
+    long long balanceComparisons = 0;
+
     public:
+    long long getBalanceComparisons() const { return balanceComparisons; }
+    void sumBalanceComparisons(long long sum){ balanceComparisons += sum;}
+
     Node* iterativeInsert(int key){
         Node* node = BST::iterativeInsert(key);
-//        balanceTree(node);
-
-/*        Node* aux = node;
-
-        bool verify = false;
-        while(aux != nullptr){
-//            verify = balance(aux);
-//            std::cout << aux->key << std::endl;   
-            aux = aux->father;
-        }
-*/       
+        balanceTree(node);  
         return node;
     }
 
-    int height(Node* node) {
-        if (node == nullptr) {
-            return 0;
-        }
-        int leftHeight = node->left ? node->left->level + 1 : 0;
-        int rightHeight = node->right ? node->right->level + 1 : 0;
-        return std::max(leftHeight, rightHeight);
-    }
 
     int getBalance(Node* node) {
+        sumBalanceComparisons(3);
         if (node == nullptr) {
+            std::cout << "é nulo" << std::endl;
             return 0;
         }
         int rightHeight = node->right == nullptr ? 0 : nodeMaxLevel(node->right) - node->level;
@@ -42,47 +33,75 @@ class AVLTree : public BST{
     }
 
     void balanceTree(Node* node) {
-        //while (node != nullptr) {
+        
+        while (node != nullptr) {
             //node->level = height(node);  // Atualiza a altura do nó
             int balance = getBalance(node);
-            std::cout << balance << std::endl;
+//            std::cout << balance << std::endl;
+            sumBalanceComparisons(1);
             if (balance > 1) {
-                std::cout << "teste" << std::endl;
-                if (getBalance(node->left) < 0) {
-                    node->left = rotateLeft(node->left);
-                }
-                node = rotateRight(node);
-            } else if (balance < -1) {  
-                std::cout << "teste right" << std::endl;
-                if (getBalance(node->right) > 0) {
+//                std::cout << "Balance" << std::endl;
+                sumBalanceComparisons(1);
+                if (getBalance(node->right) < 0) {
                     node->right = rotateRight(node->right);
                 }
                 node = rotateLeft(node);
+            } 
+            else if (balance < -1) {  
+                sumBalanceComparisons(2);
+//                std::cout << "Balance" << std::endl;
+                if (getBalance(node->left) > 0) {
+                    node->left = rotateLeft(node->left);
+                }
+                node = rotateRight(node);
             }
 
             node = node->father;
-        //}
+        }
     }
 
-    Node* rotateRight(Node* y) {
-        Node* x = y->left;
+    Node* rotateRight(Node* node) {
+        int actualLevel = node->level;
+//        std::cout << node->key << std::endl;
+        Node* x = node->left;
         Node* T2 = x->right;
 
-        x->right = y;
-        y->left = T2;
+        x->right = node;
+        node->left = T2;
 
+        sumBalanceComparisons(3);
         if (T2 != nullptr) {
-            T2->father = y;
+            T2->father = node;
         }
 
-        x->father = y->father;
-        y->father = x;
+        x->father = node->father;
+        node->father = x;
 
-        y->level = height(y);
-        x->level = height(x);
+        node->level = actualLevel + 1;
+        x->level = actualLevel;
 
+        updateLevels(node);
+        updateLevels(x);
+        /*
+        if(node->right != nullptr){
+            node->right->level = node->level + 1;
+        } 
+        if(node->left != nullptr){
+            node->left->level = node->level + 1;
+        } 
+
+        if(x->right != nullptr){ 
+            x->right->level = x->level + 1;
+        }
+
+        if(x->left != nullptr){
+            x->left->level = x->level + 1;
+        }
+        */
+
+        
         if (x->father != nullptr) {
-            if (x->father->left == y) {
+            if (x->father->left == node) {
                 x->father->left = x;
             } else {
                 x->father->right = x;
@@ -94,25 +113,38 @@ class AVLTree : public BST{
         return x;
     }
 
-    Node* rotateLeft(Node* x) {
-        Node* y = x->right;
+    Node* rotateLeft(Node* node) {
+        int actualLevel = node->level;
+//        std::cout << node->key << std::endl;
+        Node* y = node->right;
         Node* T2 = y->left;
 
-        y->left = x;
-        x->right = T2;
+        y->left = node;
+        node->right = T2;
 
+        sumBalanceComparisons(3);
         if (T2 != nullptr) {
-            T2->father = x;
+            T2->father = node;
         }
 
-        y->father = x->father;
-        x->father = y;
+        y->father = node->father;
+        node->father = y;
 
-        x->level = height(x);
-        y->level = height(y);
+        node->level = actualLevel + 1;
+        y->level = actualLevel;
+
+        updateLevels(node);
+        updateLevels(y);
+        /*
+        if(node->right != nullptr) node->right->level = node->level + 1;
+        if(node->left != nullptr) node->left->level = node->level + 1;
+
+        if(y->right != nullptr) y->right->level = y->level + 1;
+        if(y->left != nullptr) y->left->level = y->level + 1;
+        */
 
         if (y->father != nullptr) {
-            if (y->father->left == x) {
+            if (y->father->left == node) {
                 y->father->left = y;
             } else {
                 y->father->right = y;
@@ -123,54 +155,31 @@ class AVLTree : public BST{
 
         return y;
     }
-/*
-    bool balance(Node *node){ 
-        int height = 0;
-        bool originBack = false; 
-//        std::cout << "aqui" << std::endl;
-        
-        int rightHeight = node->right == nullptr ? 0 : nodeMaxLevel(node->right) - node->level;
-        int leftHeight = node->left == nullptr ? 0 : nodeMaxLevel(node->left) - node->level;
 
-        std::cout << rightHeight - leftHeight << std::endl;
-        
-        if(rightHeight - leftHeight > 1){       //Balanceamento Direita Positivo
-            // Precisa Balancear
-            if(node->right->left == nullptr && node->right->right != nullptr){
-                Node *aux = node;
-                node = aux->right;
-                node->father = aux->father;
-                Node *auxAux = node->left;
-                node->left = aux;
-                aux->right = auxAux;
-                aux->father = node;
-                if(node->father != nullptr){
-                    if (node->father->right == aux){
-                        node->father->right = node;
-                    }
-                    else{
-                        node->father->left = node;
-                    }
-                }
-                else{
-                    setRoot(node);
-                }
 
-                std::cout << "aqui" << std::endl;
+    void updateLevels(Node* node) {
+        sumBalanceComparisons(1);
+        if (node == nullptr) return;
+
+        std::queue<Node*> queue;
+        queue.push(node);
+
+
+        while (!queue.empty()) {
+            Node* current = queue.front();
+            queue.pop();
+            if (current->left != nullptr) {
+                current->left->level = current->level + 1;
+                queue.push(current->left);
             }
-            std::cout << "aqui teste" << std::endl;
-            return true;
+            
+            if (current->right != nullptr) {
+                current->right->level = current->level + 1;
+                queue.push(current->right);
+            }
+            sumBalanceComparisons(3);
         }
-        else if (rightHeight - leftHeight < 1){ //Balanceamento Esquerda Negativo
-            // Precisa Balancear
-
-            return true;
-        }
-
-        return false;
-
     }
-*/
 
     int nodeMaxLevel(Node *node){
         int maxLevel = node->level;
@@ -183,15 +192,18 @@ class AVLTree : public BST{
             {  
                 treeStack.push(currentNode);
                 currentNode = currentNode->left;
+                sumBalanceComparisons(1);
             }     
             currentNode = treeStack.top();
             treeStack.pop();
             
+            sumBalanceComparisons(1);
             if(currentNode->level > maxLevel){
                 maxLevel = currentNode->level;
             }
             
             currentNode = currentNode->right;
+            sumBalanceComparisons(1);
         } 
 
         return maxLevel;

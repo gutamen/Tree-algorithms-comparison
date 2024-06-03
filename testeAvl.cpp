@@ -38,9 +38,11 @@ int main(int argc, char* argv[]) {
     std::cout << "Nuemro de comapracoes na insercao: " << tree.getInsertComparisons() << std::endl;
     std::cout << "Tempo na construcao da arvore: " << elapsedConstruction.count() << " secs" << std::endl;
 
+    std::cout << "Nuemro de comapracoes no balanceamento: " << tree.getBalanceComparisons() << std::endl;
+    
     // Consulta na árvore
     
-    /*
+    
     int totalSearchComparisons = 0;
     auto startSearch = std::chrono::high_resolution_clock::now();
     while (queryFile >> key) {
@@ -52,18 +54,21 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Numero de comparacoes na busca: " << tree.getSearchComparisons() << std::endl;
     std::cout << "Tempo na busca: " << elapsedSearch.count() << " secs" << std::endl;
-    */
-
-    //tree.balance(tree.getRoot());
     
-    //tree.balance(tree.getRoot()->right);
-    //std::cout << tree.getRoot()->right->right->key << std::endl;
-    //std::cout << tree.getRoot()->right->right->left->father->key << std::endl;
-    tree.iterativeInsert(24);
-    tree.balanceTree(tree.getRoot()->right->right);
-    std::cout << tree.getRoot()->right->right->key << std::endl;
-    //std::cout << tree.getRoot()->right->key << std::endl;
-    //std::cout << tree.getRoot()->right->right->key << std::endl;
+
+    
+    
+    
+    //tree.iterativeInsert(21);
+    //std::cout << tree.getRoot()->right->right->right->left->key << std::endl;
+    //std::cout << tree.getRoot()->right->right->right->left->level << std::endl;
+    //tree.printTree();
+    
+    //tree.balanceTree(tree.getRoot()->right->right);
+
+    //std::cout << tree.getRoot()->right->right->left->key << std::endl;
+    //std::cout << tree.getRoot()->right->right->left->level << std::endl;
+    //tree.printTree();
 
     constructionFile.close();
     queryFile.close();
